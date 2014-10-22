@@ -14,12 +14,12 @@ def open_file(filename):
     except FileNotFoundError:
         print('Sorry, no file was found with the name \'%s\'.\n' % filename +
               'Please check your file\'s name and re-run the program.')
-        sys.exit(1);
+        sys.exit(1)
     return f
 
 # -- get user input ------------------------------------------------------------
 # Ask the user for the file names, and use the defaults if input is left blank.
-print('Text File Spell Checker');
+print('Text File Spell Checker')
 f1 = input('\nPlease enter the filename of the word list.\n' +
            '    (Leave blank to use \'wordsEN.txt\'): ')
 if f1 == '':
