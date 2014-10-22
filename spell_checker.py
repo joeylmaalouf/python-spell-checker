@@ -1,8 +1,9 @@
 # JLM - Python Spell Checker
 # Copyright (c) 2014 Joey Luke Maalouf
 
-# import our regex package for parsing our input, and the system package to quit
+# import re for findall
 import re
+# import sys for exit
 import sys
 
 
