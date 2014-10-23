@@ -1,17 +1,21 @@
 # JLM - Python Spell Checker
 # Copyright (c) 2014 Joey Luke Maalouf
 
+#import os for remove
+import os
 # import re for findall
 import re
 # import sys for exit
 import sys
+#import time for sleep
+import time
 
 
 # -- attempt to open a file ----------------------------------------------------
 # Use the built-in 'open' command, with some error handling.
-def open_file(filename):
+def open_file(filename, flag):
     try:
-        f = open(filename)
+        f = open(filename, flag)
     except FileNotFoundError:
         print('Sorry, no file was found with the name \'%s\'.\n' % filename +
               'Please check your file\'s name and re-run the program.')
@@ -29,6 +33,10 @@ f2 = input('\nPlease enter the filename to check for incorrect spelling.\n' +
            '    (Leave blank to use \'check.txt\'): ')
 if f2 == '':
     f2 = 'check.txt'
+f3 = input('\nPlease enter the filename to output the incorrect words.\n' +
+           '    (Leave blank to use \'output.txt\'): ')
+if f3 == '':
+    f3 = 'output.txt'
 print('\nChecking input file \'%s\' against list file \'%s\':' % (f1, f2))
 
 # -- process the file of acceptable words --------------------------------------
@@ -36,7 +44,7 @@ print('\nChecking input file \'%s\' against list file \'%s\':' % (f1, f2))
 # string in the list that evaluates to false (i.e. '') via list comprehensions.
 # Make everything lowercase for case-insensitive comparisons later, and add the
 # basic letters of the alphabet to the list as well.
-text_file = open_file(f1)
+text_file = open_file(f1, 'r')
 word_list = text_file.read().split('\n')
 word_list = [word.lower() for word in word_list if word]
 word_list.extend(list('abcdefghijklmnopqrstuvwxyz'))
@@ -44,7 +52,7 @@ word_list.extend(list('abcdefghijklmnopqrstuvwxyz'))
 # -- process the file of words to check ----------------------------------------
 # Open the file with words to check, then use regex with word boundaries
 # to get a list of all the individual words.
-check_file = open_file(f2)
+check_file = open_file(f2, 'r')
 to_check = re.findall(r'\b[a-zA-Z0-9]+\b', check_file.read())
 
 # -- check for any incorrect words ---------------------------------------------
@@ -70,4 +78,19 @@ for word in incorrect:
 for word in output:
     print('Found unknown word \'%s\' at position %d.' %
           (word, to_check.index(word)))
-print('\nEnd of program.\n')
+
+# -- output to file ------------------------------------------------------------
+# Remove whatever existing file there is with the same name so that we can write
+# fresh, then open our file in write mode and output our results.
+print('\nWriting errors to file \'%s\'...' % f3)
+time.sleep(4)
+try:
+    os.remove(f3)
+except FileNotFoundError:
+    pass
+with open_file(f3, 'w') as out:
+    for word in output:
+        out.write('Found unknown word \'%s\' at position %d.\n' %
+                  (word, to_check.index(word)))
+print('Done. End of program.')
+time.sleep(1)
